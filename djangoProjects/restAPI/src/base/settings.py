@@ -25,7 +25,7 @@ SECRET_KEY = 'c*nb!1_j-e2#zshlx7=6n&f#7=3l2n$gj+rv$9uh@jmy5#xbq7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["b.libtech.in"]
 
 
 # Application definition
@@ -127,3 +127,9 @@ STATIC_URL = '/static/'
 # Custom Setings
 
 AUTH_USER_MODEL = "core.User"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

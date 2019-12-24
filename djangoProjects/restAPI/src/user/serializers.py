@@ -9,11 +9,20 @@ from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     """ Serializer for the user object """
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     class Meta:
         """Default Meta Class"""
         model = get_user_model()
-        fields = ('email', 'password', 'name')
+        fields = ('email', 'password', 'password2', 'name')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+
+    def validate(self, data):
+        print(f"data is {data}")
+        pass1 = data.get('password')
+        pass2 = data.pop('password2', None)
+        if pass1 != pass2:
+            raise serializers.ValidationError("Passwords must match")
+        return data
 
     def create(self, validated_data):
         """Create function of serializer"""
