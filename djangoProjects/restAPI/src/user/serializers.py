@@ -3,9 +3,16 @@ Serializer Module for User
 """
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
+from django.utils.http import urlsafe_base64_encode
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.encoding import force_text
+
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
 
 class UserSerializer(serializers.ModelSerializer):
     """ Serializer for the user object """
@@ -26,7 +33,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create function of serializer"""
-        return get_user_model().objects.create_user(**validated_data)
+        my_user = get_user_model().objects.create_user(**validated_data)
+        request=self.context.get('request'),
+        self.send_account_activation_email(request, my_user)
+        return my_user
 
     def update(self, instance, validated_data):
         """Update function of serializer"""
@@ -39,6 +49,27 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+    def send_account_activation_email(self, request, user):
+        text_content = 'Account Activation Email'
+        subject = 'Email Activation'
+        template_name = "activation.html"
+        from_email = settings.EMAIL_HOST_USER
+        recipients = [user.email]
+        kwargs = {
+            "uidb64": urlsafe_base64_encode(force_bytes(user.pk)),
+            "token": default_token_generator.make_token(user)
+        }
+        print(str(kwargs))
+        activate_url = str(kwargs)
+        context = {
+            'user': user,
+            'activate_url': activate_url
+        }
+        html_content = render_to_string(template_name, context)
+        email = EmailMultiAlternatives(subject, text_content, from_email, recipients)
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+ 
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer class for issuing auth Token"""
@@ -74,3 +105,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['name'] = user.email
         return token
+
+
+class RegistrationActivationSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    uidb64 = serializers.CharField()
