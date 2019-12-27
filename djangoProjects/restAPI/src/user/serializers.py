@@ -1,11 +1,11 @@
 """
 Serializer Module for User
 """
-
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
-
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class UserSerializer(serializers.ModelSerializer):
     """ Serializer for the user object """
@@ -64,3 +64,13 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """Custome token serializer to include custom user fields in the token"""
+    @classmethod
+    def get_token(cls, user):
+        """Overriding get token method"""
+        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+        # Add custom claims
+        token['name'] = user.email
+        return token

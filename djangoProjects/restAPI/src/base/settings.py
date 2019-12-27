@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from pathlib import Path
+import json
+
+HOME_DIR = str(Path.home())
+JSON_CONFIG_FILE = f"{HOME_DIR}/.libtech/emailConfig.json"
+with open(JSON_CONFIG_FILE) as config_file:
+    EMAIL_CONFIG = json.load(config_file)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,8 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django_rest_passwordreset',
     'rest_framework',
+    'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'core',
     'user',
@@ -47,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -58,7 +66,7 @@ ROOT_URLCONF = 'base.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +141,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+# Settings for sending email via Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = EMAIL_CONFIG.get('username')
+EMAIL_HOST_PASSWORD = EMAIL_CONFIG.get('password')
