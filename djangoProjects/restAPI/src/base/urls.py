@@ -22,7 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = [
     path('admin/', admin.site.urls, name='login'),
     path('api/user/', include('user.urls')),
-    path('api/pr/', include('django_rest_passwordreset.urls')),
+    path('api/pr/', include('passwordreset.urls')),
     path('api/password-reset/',
          csrf_exempt(auth_views.PasswordResetView.as_view(
              template_name='password_reset.html'
