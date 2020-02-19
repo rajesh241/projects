@@ -12,12 +12,12 @@ def forms_view(request):
     """
     form_no = random.randint(0, 5)
     form_codes = [
-        '1FAIpQLSdPT97YlqNhkPtca3BTsLUFnIsLZmFKG-TfVs67DKvqCYXVWA',
         '1FAIpQLSc_sq8vhuGqHS1PQt7xA9Vl6xacKpMXs9qtZIt4ecuK9eNkKQ',
-        '1FAIpQLSdPT97YlqNhkPtca3BTsLUFnIsLZmFKG-TfVs67DKvqCYXVWA',
+        '1FAIpQLSdZTcVuL0rLv5Keano48J9XYP_iOYJejx1drfJJAhBx-u3bUg',
         '1FAIpQLSc_sq8vhuGqHS1PQt7xA9Vl6xacKpMXs9qtZIt4ecuK9eNkKQ',
-        '1FAIpQLSdPT97YlqNhkPtca3BTsLUFnIsLZmFKG-TfVs67DKvqCYXVWA',
+        '1FAIpQLSdZTcVuL0rLv5Keano48J9XYP_iOYJejx1drfJJAhBx-u3bUg',
         '1FAIpQLSc_sq8vhuGqHS1PQt7xA9Vl6xacKpMXs9qtZIt4ecuK9eNkKQ',
+        '1FAIpQLSdZTcVuL0rLv5Keano48J9XYP_iOYJejx1drfJJAhBx-u3bUg',
     ]
     embed_html = '''<iframe
     src="https://docs.google.com/forms/d/e/%s/viewform?embedded=true"

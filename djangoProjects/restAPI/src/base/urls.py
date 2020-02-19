@@ -15,33 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
-from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='login'),
     path('api/user/', include('user.urls')),
-    path('api/pr/', include('passwordreset.urls')),
-    path('api/password-reset/',
-         csrf_exempt(auth_views.PasswordResetView.as_view(
-             template_name='password_reset.html'
-         )),
-         name='password_reset'),
-    path('api/password-reset/done/',
-         auth_views.PasswordResetDoneView.as_view(
-             template_name='password_reset_done.html'
-         ),
-         name='password_reset_done'),
-    path('api/password-reset-confirm/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(
-             template_name='password_reset_confirm.html'
-         ),
-         name='password_reset_confirm'),
-    path('api/password-reset-complete/',
-         auth_views.PasswordResetCompleteView.as_view(
-             template_name='password_reset_complete.html'
-         ),
-         name='password_reset_complete'),
-
+    path('api/passwordreset/', include('passwordreset.urls')),
 ]
